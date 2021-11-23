@@ -54,7 +54,7 @@ jobs:
       - task: DotNetCoreCLI@2
         displayName: 'Run tests'
         inputs:
-          command: test
+          command: run
           publishTestResults: true
           testRunTitle: '$(Agent.JobName) on $(Agent.OS)'
 
