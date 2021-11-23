@@ -27,7 +27,7 @@ resources:
 variables:
   - template: '/miscellaneous/build_templates/variables.yml@templates'
   - name: analysisProject
-    value: SDS_TS_DotNet
+    value: Auth-CC-Simple_DotNet
 
 jobs:
   - job: Tests
