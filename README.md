@@ -2,6 +2,8 @@
 
 **Version:** 1.0.0
 
+[![Build Status](https://dev.azure.com/osieng/engineering/_apis/build/status/product-readiness/OCS/osisoft.sample-ocs-authentication_client_credentials_simple-dotnet?branchName=main)](https://dev.azure.com/osieng/engineering/_build/latest?definitionId=4393&branchName=main)
+
 Developed against DotNet 5.0.
 
 ## Requirements
