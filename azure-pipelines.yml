@@ -19,6 +19,10 @@ schedules:
 
 resources:
   repositories:
+    - repository: OpsGuildAutomationRepo
+      type: git
+      name: Engineering/OpsGuild.Automation
+      ref: refs/heads/main
     - repository: templates
       type: github
       name: osisoft/OSI-Samples
@@ -32,7 +36,6 @@ variables:
 jobs:
   - job: Tests
     strategy:
-      maxParallel: 1 # Avoid conflicts in OCS
       matrix:
         linux:
           agentOS: Linux
@@ -44,7 +47,7 @@ jobs:
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
         parameters:
-          secrets: 'TenantId, NamespaceId, ClientId, ClientSecret'
+          secrets: 'TenantId, ClientId, ClientSecret'
 
       - task: DotNetCoreCLI@2
         displayName: 'Nuget restore'
@@ -54,25 +57,21 @@ jobs:
       - task: DotNetCoreCLI@2
         displayName: 'Run tests'
         inputs:
-          command: run
+          command: test
           publishTestResults: true
           testRunTitle: '$(Agent.JobName) on $(Agent.OS)'
 
-  - job: Analysis
-    pool:
-      name: 00-OSIManaged-Containers
-      demands: Agent.OS -equals Windows_NT
-    steps:
-      - task: DotNetCoreCLI@2
-        displayName: 'Nuget restore'
-        inputs:
-          command: restore
+  - template: '/miscellaneous/build_templates/code-analysis.yml@templates'
+    parameters:
+      buildSteps:
+        - task: DotNetCoreCLI@2
+          displayName: 'Nuget restore'
+          inputs:
+            command: restore
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Build'
-        inputs:
-          command: build
+        - task: DotNetCoreCLI@2
+          displayName: 'Build'
+          inputs:
+            command: build
 
-      - template: '/miscellaneous/build_templates/binskim.yml@templates'
-
-      - template: '/miscellaneous/build_templates/analysis.yml@templates'
+        - template: '/miscellaneous/build_templates/binskim.yml@templates'
