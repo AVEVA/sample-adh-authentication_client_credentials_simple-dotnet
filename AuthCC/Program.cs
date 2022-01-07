@@ -28,6 +28,8 @@ namespace AuthCC
             string clientSecret = _configuration["ClientSecret"];
             string apiVersion = _configuration["ApiVersion"];
 
+            (_configuration as ConfigurationRoot).Dispose();
+
             using (var httpClient = new HttpClient())
             {
                 // Step 2: get the authentication endpoint from the discovery URL
