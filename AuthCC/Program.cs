@@ -8,11 +8,11 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Auth_CC
+namespace AuthCC
 {
-    class Program
+    public static class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main()
         {
             // Step 1: get needed variables 
             IConfigurationBuilder builder = new ConfigurationBuilder()
@@ -28,10 +28,12 @@ namespace Auth_CC
             string clientSecret = _configuration["ClientSecret"];
             string apiVersion = _configuration["ApiVersion"];
 
+            (_configuration as ConfigurationRoot).Dispose();
+
             using (var httpClient = new HttpClient())
             {
                 // Step 2: get the authentication endpoint from the discovery URL
-                var wellknown_information = await httpClient.GetFromJsonAsync<JsonElement>($"{resource}/identity/.well-known/openid-configuration");
+                var wellknown_information = await httpClient.GetFromJsonAsync<JsonElement>($"{resource}/identity/.well-known/openid-configuration").ConfigureAwait(false);
                 string token_url = wellknown_information.GetProperty("token_endpoint").GetString();
 
                 // Step 3: use the client ID and Secret to get the needed bearer token
@@ -42,14 +44,15 @@ namespace Auth_CC
                     new KeyValuePair<string, string>("grant_type", "client_credentials")
                 });
 
-                var token_information = await httpClient.PostAsync(token_url, data);
-                var tokenObject = (await token_information.Content.ReadFromJsonAsync<JsonElement>());
+                var token_information = await httpClient.PostAsync(new Uri(token_url), data).ConfigureAwait(false);
+                data.Dispose();
+                var tokenObject = await token_information.Content.ReadFromJsonAsync<JsonElement>().ConfigureAwait(false);
                 var token = tokenObject.GetProperty("access_token").GetString();
 
                 // Step 4: test token by calling the base tenant endpoint 
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-                var test = await httpClient.GetAsync($"{resource}/api/{apiVersion}/Tenants/{tenantId}");
+                var test = await httpClient.GetAsync(new Uri($"{resource}/api/{apiVersion}/Tenants/{tenantId}")).ConfigureAwait(false);
                 if (!test.IsSuccessStatusCode) throw new Exception("Check Failed");
             }
         }
