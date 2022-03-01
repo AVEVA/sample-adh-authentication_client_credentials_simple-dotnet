@@ -1,10 +1,11 @@
 # AVEVA Data Hub Client Credentials DotNet Sample
 
-| :loudspeaker: **Notice**: Samples have been updated to reflect that they work on AVEVA Data Hub. The samples also work on OSIsoft Cloud Services unless otherwise noted. | | -----------------------------------------------------------------------------------------------|
+| :loudspeaker: **Notice**: Samples have been updated to reflect that they work on AVEVA Data Hub. The samples also work on OSIsoft Cloud Services unless otherwise noted. | 
+| -----------------------------------------------------------------------------------------------|
 
 **Version:** 1.0.0
 
-[![Build Status](https://dev.azure.com/osieng/engineering/_apis/build/status/product-readiness/ADH/aveva.sample-adh-authentication_client_credentials_simple-dotnet?branchName=main)](https://dev.azure.com/osieng/engineering/_build/latest?definitionId=4393&branchName=main)
+[![Build Status](https://dev.azure.com/osieng/engineering/_apis/build/status/product-readiness/OCS/aveva.sample-adh-authentication_client_credentials_simple-dotnet?repoName=osisoft%2Fsample-adh-authentication_client_credentials_simple-dotnet&branchName=main)](https://dev.azure.com/osieng/engineering/_build/latest?definitionId=4393&repoName=osisoft%2Fsample-adh-authentication_client_credentials_simple-dotnet&branchName=main)
 
 Developed against DotNet 5.0.
 
