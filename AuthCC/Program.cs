@@ -30,13 +30,13 @@ namespace AuthCC
 
             (_configuration as ConfigurationRoot).Dispose();
 
-            using HttpClient httpClient = new();
+            using HttpClient httpClient = new ();
             // Step 2: get the authentication endpoint from the discovery URL
             JsonElement wellknownInformation = await httpClient.GetFromJsonAsync<JsonElement>($"{resource}/identity/.well-known/openid-configuration").ConfigureAwait(false);
             string tokenUrl = wellknownInformation.GetProperty("token_endpoint").GetString();
 
             // Step 3: use the client ID and Secret to get the needed bearer token
-            FormUrlEncodedContent data = new(new[]
+            FormUrlEncodedContent data = new (new[]
             {
                 new KeyValuePair<string, string>("client_id", clientId),
                 new KeyValuePair<string, string>("client_secret", clientSecret),
