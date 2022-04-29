@@ -19,7 +19,7 @@ namespace AuthCC
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appsettings.json")
                .AddJsonFile("appsettings.test.json", optional: true);
-            var _configuration = builder.Build();
+            IConfigurationRoot _configuration = builder.Build();
 
             // ==== Client constants ====
             string tenantId = _configuration["TenantId"];
@@ -30,31 +30,29 @@ namespace AuthCC
 
             (_configuration as ConfigurationRoot).Dispose();
 
-            using (var httpClient = new HttpClient())
+            using HttpClient httpClient = new ();
+            // Step 2: get the authentication endpoint from the discovery URL
+            JsonElement wellknownInformation = await httpClient.GetFromJsonAsync<JsonElement>($"{resource}/identity/.well-known/openid-configuration").ConfigureAwait(false);
+            string tokenUrl = wellknownInformation.GetProperty("token_endpoint").GetString();
+
+            // Step 3: use the client ID and Secret to get the needed bearer token
+            FormUrlEncodedContent data = new (new[]
             {
-                // Step 2: get the authentication endpoint from the discovery URL
-                var wellknown_information = await httpClient.GetFromJsonAsync<JsonElement>($"{resource}/identity/.well-known/openid-configuration").ConfigureAwait(false);
-                string token_url = wellknown_information.GetProperty("token_endpoint").GetString();
+                new KeyValuePair<string, string>("client_id", clientId),
+                new KeyValuePair<string, string>("client_secret", clientSecret),
+                new KeyValuePair<string, string>("grant_type", "client_credentials")
+            });
 
-                // Step 3: use the client ID and Secret to get the needed bearer token
-                var data = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("client_id", clientId),
-                    new KeyValuePair<string, string>("client_secret", clientSecret),
-                    new KeyValuePair<string, string>("grant_type", "client_credentials")
-                });
+            HttpResponseMessage tokenInformation = await httpClient.PostAsync(new Uri(tokenUrl), data).ConfigureAwait(false);
+            data.Dispose();
+            JsonElement tokenObject = await tokenInformation.Content.ReadFromJsonAsync<JsonElement>().ConfigureAwait(false);
+            string token = tokenObject.GetProperty("access_token").GetString();
 
-                var token_information = await httpClient.PostAsync(new Uri(token_url), data).ConfigureAwait(false);
-                data.Dispose();
-                var tokenObject = await token_information.Content.ReadFromJsonAsync<JsonElement>().ConfigureAwait(false);
-                var token = tokenObject.GetProperty("access_token").GetString();
+            // Step 4: test token by calling the base tenant endpoint 
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-                // Step 4: test token by calling the base tenant endpoint 
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-                var test = await httpClient.GetAsync(new Uri($"{resource}/api/{apiVersion}/Tenants/{tenantId}")).ConfigureAwait(false);
-                if (!test.IsSuccessStatusCode) throw new Exception("Check Failed");
-            }
+            HttpResponseMessage test = await httpClient.GetAsync(new Uri($"{resource}/api/{apiVersion}/Tenants/{tenantId}")).ConfigureAwait(false);
+            if (!test.IsSuccessStatusCode) throw new Exception("Check Failed");
         }
     }
 }
