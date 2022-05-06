@@ -3,15 +3,15 @@
 | :loudspeaker: **Notice**: Samples have been updated to reflect that they work on AVEVA Data Hub. The samples also work on OSIsoft Cloud Services unless otherwise noted. | 
 | -----------------------------------------------------------------------------------------------|
 
-**Version:** 1.0.2
+**Version:** 1.1.0
 
 [![Build Status](https://dev.azure.com/osieng/engineering/_apis/build/status/product-readiness/OCS/aveva.sample-adh-authentication_client_credentials_simple-dotnet?repoName=osisoft%2Fsample-adh-authentication_client_credentials_simple-dotnet&branchName=main)](https://dev.azure.com/osieng/engineering/_build/latest?definitionId=4393&repoName=osisoft%2Fsample-adh-authentication_client_credentials_simple-dotnet&branchName=main)
 
-Developed against DotNet 5.0.
+Developed against DotNet 6.0.
 
 ## Requirements
 
-- DotNet 5.0
+- DotNet 6.0
 - Register a [Client-Credentials Client](https://datahub.connect.aveva.com/clients) in your AVEVA Data Hub tenant and create a client secret to use in the configuration of this sample. ([Video Walkthrough](https://www.youtube.com/watch?v=JPWy0ZX9niU))
   - __NOTE__: This sample only requires the `Tenant Member` role to run successfully 
     - see: ['Authorization Allowed for these roles' in the documentation](https://docs.osisoft.com/bundle/ocs/page/api-reference/tenant/tenant-tenants.html#get-tenant) 
@@ -63,7 +63,7 @@ dotnet test
 
 ---
 
-Tested against DotNet 5.0
+Tested against DotNet 6.0
 
 For the main ADH Authentication samples page [ReadMe](https://github.com/osisoft/OSI-Samples-OCS/blob/main/docs/AUTHENTICATION.md)  
 For the main ADH samples page [ReadMe](https://github.com/osisoft/OSI-Samples-OCS)  
