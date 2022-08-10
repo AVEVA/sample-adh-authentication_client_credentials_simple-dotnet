@@ -1,5 +1,9 @@
 # Version History
 
+## 1.1.3 / 2022-08-11
+
+- Parameterize pool and demands
+
 ## 1.1.2 / 2022-08-02
 
 - Add dependabot.yml to automate dependency checks
