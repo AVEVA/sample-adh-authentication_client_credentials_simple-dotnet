@@ -19,9 +19,9 @@ schedules:
 
 resources:
   repositories:
-    - repository: OpsGuildAutomationRepo
+    - repository: ArchitectureRepo
       type: git
-      name: DevOps/opsguild.automation
+      name: Architecture/Architecture
       ref: refs/heads/main
     - repository: templates
       type: github
@@ -42,7 +42,7 @@ jobs:
         windows:
           agentOS: Windows_NT
     pool:
-      name: DevOps Managed Containers Build
+      name: DevOps-Managed-Ubt22-Mdp
       demands: Agent.OS -equals $(agentOS)
     steps:
       - template: '/miscellaneous/build_templates/appsettings.yml@templates'
